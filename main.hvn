@@ -1,0 +1,7 @@
+@Timeless
+{   
+
+writeLn("Author : Lunore");
+writeLn("LANGUAGE : HEAVEN");
+
+}
