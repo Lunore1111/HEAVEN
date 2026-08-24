@@ -1,3 +1,3 @@
 #include<stdio.h>
  int main(){
-printf("Author : Lunore\n");printf("LANGUAGE : HEAVEN\n"); }
+printf("%s\n","your age is ");int age =20 ;printf("%d\n",20); }

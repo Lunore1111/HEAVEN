@@ -1,7 +1,8 @@
 @Timeless
 {   
 
-writeLn("Author : Lunore");
-writeLn("LANGUAGE : HEAVEN");
+writeLn("your age is ");
+age : i32 = 20;
+writeLn(age);
 
 }

@@ -1,0 +1,3 @@
+#!/bin/bash
+CC=/opt/homebrew/bin/gcc-15
+CC -std=c23 -g -I./libs compiler/hvnc.c src/*.c -o hvnc

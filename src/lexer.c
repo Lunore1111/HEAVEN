@@ -13,8 +13,13 @@ const char *enum_strings[] =
 "TKN_CURLY_L", 
 "TKN_CURLY_R", 
 "TKN_RETURN", 
-"TKN_AMPERSAND", 
-"TKN_UNIQUE_NAME"};
+"TKN_AMPERSAND",
+"TKN_UNIQUE_NAME",
+"TKN_VAR",
+"TKNE_COLON",
+"TKN_ASSIGN",
+"TkN_I32"
+};
 
 
 Token *tokens = nullptr;
@@ -58,9 +63,39 @@ while(c != EOF)
             c = fgetc(in);
             continue;
        }
+
        else if(isalpha(c))
-       { 
-        while(isalpha(c)){
+       {
+        
+       // FOR READING SOMETHING LIKE :
+       //i32 , f32
+         buff[i++] = (char)c;
+         // printf("current_c : %c\n",current_c);
+         c = fgetc(in);
+         if(isdigit(c))
+         {
+           // c = fgetc(in);
+           while(isdigit(c))
+           {
+             buff[i] = (char)c;
+             i++;
+             c = fgetc(in); 
+           }
+           buff[i] ='\0';
+           i = 0;
+           if(strcmp("i32",buff) == 0)
+           {
+             tokens[tkn_count].type = TKN_I32;
+             strcpy(tokens[tkn_count].value,buff);
+             tkn_count++;
+           }
+           ungetc(c,in); //  i32
+         }               //      
+        // else ungetc(c,in);
+
+        // FOR READING NORMAL ALPHABETS  
+         else { 
+           while(isalpha(c)){
              buff[i] = (char)c;
                i++;
             c =  fgetc(in);
@@ -82,12 +117,27 @@ while(c != EOF)
             strcpy(tokens[tkn_count].value,buff);
             tkn_count++;
          }
+         else if(strcmp("module",buff) == 0)
+         {
+           tokens[tkn_count].type = TKN_MODULE;
+           strcpy(tokens[tkn_count].value,buff);
+           tkn_count++;
+         }
+        else if(strcmp("io",buff) == 0)
+         {
+           tokens[tkn_count].type = TKN_IO;
+           strcpy(tokens[tkn_count].value,buff);
+           tkn_count++;
+         }
+         
+        
           else{
-            tokens[tkn_count].type = TKN_RANDOM_IDEN;
+            tokens[tkn_count].type = TKN_VAR;
             strcpy(tokens[tkn_count].value,buff);
             tkn_count++;
-          }
+           }
         
+       }
        }
        else if(isdigit(c)) 
        {
@@ -156,6 +206,21 @@ while(c != EOF)
           tokens[tkn_count].value[1] = '\0';
           tkn_count++;
       }
+       else if(c == ':')
+       {
+           tokens[tkn_count].type = TKN_COLON;
+          tokens[tkn_count].value[0] = ':';
+          tokens[tkn_count].value[1] = '\0';
+          tkn_count++;
+
+       }
+       else if(c == '=')
+       {
+          tokens[tkn_count].type = TKN_ASSIGN;
+          tokens[tkn_count].value[0] = '=';
+          tokens[tkn_count].value[1] = '\0';
+          tkn_count++;
+       }
        
        c= fgetc(in);
     }

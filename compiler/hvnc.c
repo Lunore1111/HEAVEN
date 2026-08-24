@@ -23,15 +23,18 @@ int main(int argc,char **argv)
 
   size_t tkn_cnt = token_cnt();
 
-  //for(int i=0;i<tkn_cnt;i++)
-  //{
+  /*for(int i=0;i<tkn_cnt;i++)
+  {
  
-    // printf("[ No. : %d, type : %d , value : %s ]\n",i,tokens[i].type,tokens[i].value);
+     printf("[ No. : %d, type : %d , value : %s ]\n",i,tokens[i].type,tokens[i].value);
  
-//  }
+} 
+*/
+
  //  printf("total token cnt %d\n",token_cnt());
   // printf("%s\n",enum_strings[1]);
-  
+    
+
   fclose(in);
     
   FILE *out = nullptr;
@@ -41,7 +44,14 @@ int main(int argc,char **argv)
     printf("you messed up file cant be open");
   }
   parse(out);
-  fclose(out);
+  
+ /* printf("\n");
+ for(int i=0;i<1;i++)
+ {
+   printf("identifier  |    type    |      value \n");
+  printf("%s  %s  %s\n",table[0].identifier,table[0].type,table[0].value);
+}*/
+fclose(out);
     
   /* FILE *out = nullptr;
     out = fopen("out.c","w");
