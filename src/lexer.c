@@ -18,7 +18,16 @@ const char *enum_strings[] =
 "TKN_VAR",
 "TKNE_COLON",
 "TKN_ASSIGN",
-"TkN_I32"
+"TKN_I32",
+"TKN_I64",
+"TKN_f32",
+"TKN_f64",
+"TKN_VAR_STRING",
+"TKN_B8",
+"TKN_C8",// 16
+"TKN_MODULE", //17
+"TKN_IO", // 18
+"TKN_READLN" 
 };
 
 
@@ -89,6 +98,38 @@ while(c != EOF)
              strcpy(tokens[tkn_count].value,buff);
              tkn_count++;
            }
+           else if(strcmp("i64",buff) == 0)
+           {
+             tokens[tkn_count].type = TKN_I64;
+             strcpy(tokens[tkn_count].value,buff);
+             tkn_count++;
+           }
+           else if(strcmp("f32",buff) == 0)
+           {
+             tokens[tkn_count].type = TKN_F32;
+             strcpy(tokens[tkn_count].value,buff);
+             tkn_count++;
+           }
+           else if(strcmp("f64",buff) == 0)
+           {
+             tokens[tkn_count].type = TKN_F64;
+             strcpy(tokens[tkn_count].value,buff);
+             tkn_count++;
+           }
+           else if(strcmp("c8",buff) == 0)
+           {
+             tokens[tkn_count].type = TKN_C8;
+             strcpy(tokens[tkn_count].value,buff);
+             tkn_count++;
+           }
+            else if(strcmp("b8",buff) == 0)
+           {
+             tokens[tkn_count].type = TKN_B8;
+             strcpy(tokens[tkn_count].value,buff);
+             tkn_count++;
+           }
+           
+           
            ungetc(c,in); //  i32
          }               //      
         // else ungetc(c,in);
@@ -126,6 +167,19 @@ while(c != EOF)
         else if(strcmp("io",buff) == 0)
          {
            tokens[tkn_count].type = TKN_IO;
+           strcpy(tokens[tkn_count].value,buff);
+           tkn_count++;
+         }
+         else if(strcmp("readLn",buff) == 0)
+         {
+           tokens[tkn_count].type = TKN_READLN;
+           strcpy(tokens[tkn_count].value,buff);
+           tkn_count++;
+         
+         }
+         else if(strcmp("string",buff) == 0)
+         {
+           tokens[tkn_count].type = TKN_VAR_STRING;
            strcpy(tokens[tkn_count].value,buff);
            tkn_count++;
          }

@@ -1,8 +1,9 @@
 @Timeless
 {   
 
-writeLn("your age is ");
-age : i32 = 20;
+writeLn("whats ur age??");
+age : i32;
+readLn(age);
 writeLn(age);
-
+writeLn("ohh same age lets go on date");
 }
