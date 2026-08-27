@@ -23,12 +23,13 @@ int main(int argc,char **argv)
 
   size_t tkn_cnt = token_cnt();
 
-/*  for(int i=0;i<tkn_cnt;i++)
+  for(int i=0;i<tkn_cnt;i++)
   {
  
      printf("[ No. : %d, type : %d , value : %s ]\n",i,tokens[i].type,tokens[i].value);
  
-} */
+
+  } 
 
 
  //  printf("total token cnt %d\n",token_cnt());
@@ -43,6 +44,8 @@ int main(int argc,char **argv)
   {
     printf("you messed up file cant be open");
   }
+  
+
   parse(out);
   
  /* printf("\n");

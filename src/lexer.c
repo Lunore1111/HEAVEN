@@ -30,31 +30,34 @@ const char *enum_strings[] =
 "TKN_READLN" 
 };
 
-
 Token *tokens = nullptr;
 size_t tkn_count = 0;
 
 char buff[128];
 size_t i = 0;
 
-Token *give_tokens(FILE *in){
-tokens = malloc(64*sizeof(Token));
-int c = fgetc(in);
-while(c != EOF)
-    {  
-       if(c == '@')
-       {
-         buff[i] = (char)c;
-         i++;
-         buff[i]='\0';
-         i=0;
-         tokens[tkn_count].type = TKN_AMPERSAND;
-         strcpy(tokens[tkn_count].value,buff);
-         tkn_count++;
-         c= fgetc(in);
-         if(isalpha(c))
-         {
-            while(isalpha(c))
+Token *give_tokens(FILE *in)
+{
+ tokens = malloc(64*sizeof(Token));     
+ int c = fgetc(in);
+ while(c != EOF)
+ {
+  switch(c)
+  {
+    case '@':
+    
+    buff[i] = (char)c;
+    i++;
+    buff[i] = '\0';
+    i=0;
+    tokens[tkn_count].type = TKN_AMPERSAND;
+    strcpy(tokens[tkn_count].value,buff);
+    tkn_count++;
+    c = fgetc(in);
+    
+    if(isalpha(c))
+    {
+      while(isalpha(c))
             {
                buff[i] = (char)c;
                i++;
@@ -65,20 +68,16 @@ while(c != EOF)
             tokens[tkn_count].type = TKN_UNIQUE_NAME;
             strcpy(tokens[tkn_count].value,buff);
             tkn_count++;
-         }
-         
-       } 
-       if(isspace(c)){
-            c = fgetc(in);
-            continue;
-       }
+   }
+    break;
+    
+    case ' ':
+    break;
 
-       else if(isalpha(c))
-       {
-        
-       // FOR READING SOMETHING LIKE :
-       //i32 , f32
-         buff[i++] = (char)c;
+    case 'a'...'z':
+    case 'A'...'Z':
+    
+    buff[i++] = (char)c;
          // printf("current_c : %c\n",current_c);
          c = fgetc(in);
          if(isdigit(c))
@@ -131,12 +130,11 @@ while(c != EOF)
            
            
            ungetc(c,in); //  i32
-         }               //      
-        // else ungetc(c,in);
-
-        // FOR READING NORMAL ALPHABETS  
-         else { 
-           while(isalpha(c)){
+         }
+          // FOR READING NORMAL ALPHABETS  
+        else { 
+           
+        while(isalpha(c)){
              buff[i] = (char)c;
                i++;
             c =  fgetc(in);
@@ -192,32 +190,10 @@ while(c != EOF)
            }
         
        }
-       }
-       else if(isdigit(c)) 
-       {
-                
-        while(isdigit(c)){
-            buff[i] = (char)c;
-            i++;
-            c= fgetc(in); 
-           }
-           buff[i] = '\0';
-           i = 0;
-           ungetc(c,in);
-        tokens[tkn_count].type = TKN_INT_LIT;
-        strcpy(tokens[tkn_count].value,buff);
-        tkn_count++;
-       } 
-       else if(c == ';')   
-       {
-        tokens[tkn_count].type = TKN_SEMI; 
-        tokens[tkn_count].value[0] = ';';
-        tokens[tkn_count].value[1] = '\0';
-        tkn_count++;
-        
-      }  
-       else if(c == '"')
-       { 
+       break;
+       
+       case '"':
+         
          c = fgetc(in);
          while(c != '"' && c!=EOF)
          {
@@ -230,58 +206,79 @@ while(c != EOF)
          tokens[tkn_count].type = TKN_STRING;
          strcpy(tokens[tkn_count].value,buff);
          tkn_count++;
-       }
-       else if(c == '(')
-       {
-          tokens[tkn_count].type = TKN_LPAREN;
-          tokens[tkn_count].value[0] = '(';
-          tokens[tkn_count].value[1] = '\0';
-          tkn_count++;
-           }
-        
-       else if(c == ')')
-       {
-          tokens[tkn_count].type = TKN_RPAREN;
-          tokens[tkn_count].value[0] = ')';
-          tokens[tkn_count].value[1] = '\0';
-          tkn_count++;
-           }
-      else if(c == '{')
-      {
-        tokens[tkn_count].type = TKN_CURLY_L;
-          tokens[tkn_count].value[0] = '{';
-          tokens[tkn_count].value[1] = '\0';
-          tkn_count++; 
-      }
-      else if(c == '}')
-      {
-         tokens[tkn_count].type = TKN_CURLY_R;
-          tokens[tkn_count].value[0] = '}';
-          tokens[tkn_count].value[1] = '\0';
-          tkn_count++;
-      }
-       else if(c == ':')
-       {
-           tokens[tkn_count].type = TKN_COLON;
-          tokens[tkn_count].value[0] = ':';
-          tokens[tkn_count].value[1] = '\0';
-          tkn_count++;
+         
+        break;
 
-       }
-       else if(c == '=')
-       {
-          tokens[tkn_count].type = TKN_ASSIGN;
-          tokens[tkn_count].value[0] = '=';
-          tokens[tkn_count].value[1] = '\0';
-          tkn_count++;
-       }
+       case '0'...'9':
+        
+        while(isdigit(c))
+           {
+          buff[i] = (char)c;
+            i++;
+            c= fgetc(in); 
+           }
+           buff[i] = '\0';
+           i = 0;
+           ungetc(c,in);
+        tokens[tkn_count].type = TKN_INT_LIT;
+        strcpy(tokens[tkn_count].value,buff);
+        tkn_count++;
+
+        break;
+
+       case ';':
        
-       c= fgetc(in);
-    }
-    //  give_token_count(tkn_count);
-    return tokens;
+       tokens[tkn_count].type = TKN_SEMI;
+       tokens[tkn_count].value[0] =';';
+       tokens[tkn_count].value[1] ='\0';
+       tkn_count++;
+        
+       break;
+
+       case '(':
+        
+       tokens[tkn_count].type = TKN_LPAREN;
+       tokens[tkn_count].value[0] ='(';
+       tokens[tkn_count].value[1] ='\0';
+       tkn_count++; 
+      
+       break;
+
+       case ')':
+
+       printf("RPAREN this case did run ");  
+       tokens[tkn_count].type = TKN_RPAREN;
+       tokens[tkn_count].value[0] =')';
+       tokens[tkn_count].value[1] ='\0';
+       tkn_count++;  
+
+        break;
+ 
+      
+       case '{':
+       
+       tokens[tkn_count].type = TKN_CURLY_L;
+       tokens[tkn_count].value[0] ='{';
+       tokens[tkn_count].value[1] ='\0';
+       tkn_count++;
+        
+       break;
+
+      case '}':
+       
+       tokens[tkn_count].type = TKN_CURLY_R;
+       tokens[tkn_count].value[0] ='}';
+       tokens[tkn_count].value[1] ='\0';
+       tkn_count++;
+
+      break;
+  }
+       
+  c = fgetc(in);
+ }
+  return tokens;
 }
 size_t token_cnt()
 {
-   return tkn_count;
+  return tkn_count;
 }
